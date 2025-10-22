@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: eshop-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - eshop-net
+
+  app:
+    container_name: eshop-app
+    build: .
+    ports:
+      - "8501:8501"
+    networks:
+      - eshop-net
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/
+    depends_on:
+      - mongodb
+
+networks:
+  eshop-net:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
